@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -14,6 +14,7 @@ class TestCliListFormats:
     """Tests for --list-formats flag."""
 
     def test_list_formats_exits_zero(self, capsys: pytest.CaptureFixture[str]) -> None:
+        """Verify --list-formats prints all formats and exits with code 0."""
         result = main(["--list-formats"])
         assert result == 0
         captured = capsys.readouterr()
@@ -26,6 +27,7 @@ class TestCliVersion:
     """Tests for --version flag."""
 
     def test_version_flag(self) -> None:
+        """Verify --version raises SystemExit with code 0."""
         with pytest.raises(SystemExit, match="0"):
             main(["--version"])
 
@@ -36,6 +38,7 @@ class TestCliFileValidation:
     def test_missing_file_returns_error(
         self, capsys: pytest.CaptureFixture[str]
     ) -> None:
+        """Verify a missing file produces an error message and exit code 1."""
         result = main(["nonexistent_file.pdf"])
         assert result == 1
         captured = capsys.readouterr()
@@ -44,6 +47,7 @@ class TestCliFileValidation:
     def test_unsupported_format_returns_error(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:
+        """Verify an unsupported extension produces an error and exit code 1."""
         fake_file = tmp_path / "test.xyz"
         fake_file.write_text("content")
         result = main([str(fake_file)])
@@ -58,15 +62,13 @@ class TestCliExtraction:
     @patch("unbox.cli.get_extractor")
     def test_extract_to_file(
         self,
-        mock_get: pytest.FixtureRequest,
+        mock_get: MagicMock,
         tmp_path: Path,
-        capsys: pytest.CaptureFixture[str],
     ) -> None:
-        # Create a fake input file
+        """Verify extraction writes correct content to a .txt file."""
         input_file = tmp_path / "sample.pdf"
         input_file.write_text("dummy")
 
-        # Mock extractor
         mock_extractor = mock_get.return_value
         mock_extractor.extract.return_value = "Extracted text content"
 
@@ -80,10 +82,11 @@ class TestCliExtraction:
     @patch("unbox.cli.get_extractor")
     def test_extract_to_stdout(
         self,
-        mock_get: pytest.FixtureRequest,
+        mock_get: MagicMock,
         tmp_path: Path,
         capsys: pytest.CaptureFixture[str],
     ) -> None:
+        """Verify --stdout prints extracted text to the console."""
         input_file = tmp_path / "sample.pdf"
         input_file.write_text("dummy")
 

@@ -12,10 +12,12 @@ class TestDocxExtractor:
     """Tests for DocxExtractor."""
 
     def test_supported_extensions(self) -> None:
+        """Verify the extractor registers for .docx."""
         assert DocxExtractor.supported_extensions == [".docx"]
 
     @patch("unbox.extractors.docx.Document")
     def test_extract_paragraphs(self, mock_doc_cls: MagicMock) -> None:
+        """Verify paragraph text is extracted and joined."""
         para1 = MagicMock()
         para1.text = "First paragraph"
         para2 = MagicMock()
@@ -34,6 +36,7 @@ class TestDocxExtractor:
 
     @patch("unbox.extractors.docx.Document")
     def test_extract_tables(self, mock_doc_cls: MagicMock) -> None:
+        """Verify table cells are extracted with pipe separators."""
         cell1 = MagicMock()
         cell1.text = "A"
         cell2 = MagicMock()
@@ -55,6 +58,7 @@ class TestDocxExtractor:
 
     @patch("unbox.extractors.docx.Document")
     def test_extract_skips_empty_paragraphs(self, mock_doc_cls: MagicMock) -> None:
+        """Verify whitespace-only paragraphs are omitted."""
         para = MagicMock()
         para.text = "   "
 

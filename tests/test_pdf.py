@@ -12,11 +12,12 @@ class TestPdfExtractor:
     """Tests for PdfExtractor."""
 
     def test_supported_extensions(self) -> None:
+        """Verify the extractor registers for .pdf."""
         assert PdfExtractor.supported_extensions == [".pdf"]
 
     @patch("unbox.extractors.pdf.fitz")
     def test_extract_returns_text(self, mock_fitz: MagicMock) -> None:
-        # Set up mock pages
+        """Verify text from all pages is extracted and concatenated."""
         page1 = MagicMock()
         page1.get_text.return_value = "Page 1 content"
         page2 = MagicMock()
@@ -36,6 +37,7 @@ class TestPdfExtractor:
 
     @patch("unbox.extractors.pdf.fitz")
     def test_extract_skips_blank_pages(self, mock_fitz: MagicMock) -> None:
+        """Verify whitespace-only pages are omitted from output."""
         page1 = MagicMock()
         page1.get_text.return_value = "Content"
         page2 = MagicMock()
@@ -53,5 +55,6 @@ class TestPdfExtractor:
         assert result == "Content"
 
     def test_repr(self) -> None:
+        """Verify the repr includes the class name."""
         extractor = PdfExtractor()
         assert "PdfExtractor" in repr(extractor)

@@ -50,3 +50,6 @@ select = ["E", "F", "W", "I", "UP"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.pylint.main]
+init-hook = "import sys; sys.path.insert(0, 'src')"
