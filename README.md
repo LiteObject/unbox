@@ -54,6 +54,26 @@ List supported formats:
 unbox --list-formats
 ```
 
+### Run without installing
+
+You can run unbox as a Python module without installing the console entry point:
+
+```bash
+python -m unbox report.pdf
+```
+
+Or without any install at all (just the dependencies):
+
+```powershell
+# PowerShell
+$env:PYTHONPATH = "src"; python -m unbox report.pdf
+```
+
+```bash
+# Bash
+PYTHONPATH=src python -m unbox report.pdf
+```
+
 ## Adding a New Format
 
 Adding support for a new file format requires **three steps**:
